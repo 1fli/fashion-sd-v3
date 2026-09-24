@@ -1,0 +1,44 @@
+{
+  "recorded_at": "2026-09-16T14:54:36.814967+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "note": "llm:load here is first-fetch download time, not steady-state load. See the swap run for the warm figure (0.93s).",
+  "args": {
+    "sdxl": false,
+    "sd15": false,
+    "llm": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+    "swap": false,
+    "base": null,
+    "lora": null,
+    "resolution": null,
+    "steps": 25,
+    "runs": 3,
+    "keep": false,
+    "out": "r1_benchmark_llm.json"
+  },
+  "results": [
+    {
+      "stage": "llm:load",
+      "seconds": 249.98,
+      "rss_gb": 1.49,
+      "rss_delta_gb": 1.2,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 14.77
+    },
+    {
+      "stage": "llm:generate_128tok",
+      "seconds": 5.34,
+      "rss_gb": 1.6,
+      "rss_delta_gb": 0.01,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 13.7
+    },
+    {
+      "stage": "llm:unload",
+      "seconds": 0.03,
+      "rss_gb": 1.6,
+      "rss_delta_gb": 0.0,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 13.7
+    }
+  ]
+}

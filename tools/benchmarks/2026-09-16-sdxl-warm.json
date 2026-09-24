@@ -1,0 +1,75 @@
+{
+  "recorded_at": "2026-09-16T14:42:47.185461+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "args": {
+    "sdxl": true,
+    "sd15": false,
+    "llm": null,
+    "swap": false,
+    "base": "stabilityai/stable-diffusion-xl-base-1.0",
+    "lora": null,
+    "resolution": null,
+    "steps": 25,
+    "runs": 3,
+    "keep": false,
+    "out": "r1_benchmark_sdxl_warm.json"
+  },
+  "results": [
+    {
+      "stage": "sdxl:pipeline_load",
+      "seconds": 7.92,
+      "rss_gb": 1.04,
+      "rss_delta_gb": 0.73,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 11.69
+    },
+    {
+      "stage": "sdxl:to_mps",
+      "seconds": 1.66,
+      "rss_gb": 0.53,
+      "rss_delta_gb": -0.53,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 11.5
+    },
+    {
+      "stage": "sdxl:warmup_gen_1step",
+      "seconds": 3.98,
+      "rss_gb": 0.31,
+      "rss_delta_gb": -0.22,
+      "mps_alloc_gb": 6.95,
+      "sys_avail_gb": 7.47
+    },
+    {
+      "stage": "sdxl:gen_25step_run1",
+      "seconds": 25.02,
+      "rss_gb": 0.48,
+      "rss_delta_gb": 0.04,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 10.55
+    },
+    {
+      "stage": "sdxl:gen_25step_run2",
+      "seconds": 24.16,
+      "rss_gb": 0.48,
+      "rss_delta_gb": -0.0,
+      "mps_alloc_gb": 6.95,
+      "sys_avail_gb": 8.2
+    },
+    {
+      "stage": "sdxl:gen_25step_run3",
+      "seconds": 24.45,
+      "rss_gb": 0.48,
+      "rss_delta_gb": -0.0,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 10.44
+    },
+    {
+      "stage": "sdxl:unload",
+      "seconds": 0.29,
+      "rss_gb": 0.47,
+      "rss_delta_gb": -0.01,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 15.35
+    }
+  ]
+}

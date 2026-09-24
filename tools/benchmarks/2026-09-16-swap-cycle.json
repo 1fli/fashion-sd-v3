@@ -1,0 +1,124 @@
+{
+  "recorded_at": "2026-09-16T14:56:13.430779+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "note": "The decisive run. Full SDXL -> LLM -> SDXL cycle costs ~18s of overhead. Note llm:load at 0.93s warm (MLX memory-maps) versus sdxl:pipeline_load at 12.44s (diffusers deserialises).",
+  "args": {
+    "sdxl": false,
+    "sd15": false,
+    "llm": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+    "swap": true,
+    "base": null,
+    "lora": null,
+    "resolution": null,
+    "steps": 25,
+    "runs": 1,
+    "keep": false,
+    "out": "r1_benchmark_swap.json"
+  },
+  "results": [
+    {
+      "stage": "sdxl:pipeline_load",
+      "seconds": 9.81,
+      "rss_gb": 2.76,
+      "rss_delta_gb": 2.45,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 14.45
+    },
+    {
+      "stage": "sdxl:to_mps",
+      "seconds": 1.47,
+      "rss_gb": 0.39,
+      "rss_delta_gb": -2.46,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 12.84
+    },
+    {
+      "stage": "sdxl:warmup_gen_1step",
+      "seconds": 3.53,
+      "rss_gb": 0.47,
+      "rss_delta_gb": 0.08,
+      "mps_alloc_gb": 6.95,
+      "sys_avail_gb": 7.49
+    },
+    {
+      "stage": "sdxl:gen_25step_run1",
+      "seconds": 24.07,
+      "rss_gb": 0.51,
+      "rss_delta_gb": 0.04,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 9.63
+    },
+    {
+      "stage": "swap:unload_diffusion",
+      "seconds": 0.22,
+      "rss_gb": 0.48,
+      "rss_delta_gb": -0.02,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 14.07
+    },
+    {
+      "stage": "llm:load",
+      "seconds": 0.93,
+      "rss_gb": 8.85,
+      "rss_delta_gb": 8.36,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 16.94
+    },
+    {
+      "stage": "llm:generate_128tok",
+      "seconds": 4.16,
+      "rss_gb": 8.86,
+      "rss_delta_gb": 0.0,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 15.46
+    },
+    {
+      "stage": "swap:unload_llm",
+      "seconds": 0.04,
+      "rss_gb": 8.86,
+      "rss_delta_gb": 0.0,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 15.46
+    },
+    {
+      "stage": "sdxl:pipeline_load",
+      "seconds": 12.44,
+      "rss_gb": 2.5,
+      "rss_delta_gb": -6.36,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 9.27
+    },
+    {
+      "stage": "sdxl:to_mps",
+      "seconds": 1.7,
+      "rss_gb": 0.46,
+      "rss_delta_gb": -2.2,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 8.94
+    },
+    {
+      "stage": "sdxl:warmup_gen_1step",
+      "seconds": 3.06,
+      "rss_gb": 0.4,
+      "rss_delta_gb": -0.06,
+      "mps_alloc_gb": 6.95,
+      "sys_avail_gb": 6.41
+    },
+    {
+      "stage": "sdxl:gen_25step_run1",
+      "seconds": 25.51,
+      "rss_gb": 0.45,
+      "rss_delta_gb": 0.06,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 8.38
+    },
+    {
+      "stage": "sdxl:unload",
+      "seconds": 0.3,
+      "rss_gb": 0.44,
+      "rss_delta_gb": -0.01,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 10.92
+    }
+  ]
+}

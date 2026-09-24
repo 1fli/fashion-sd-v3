@@ -1,0 +1,60 @@
+{
+  "recorded_at": "2026-09-15T20:29:43.735512+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "args": {
+    "sdxl": true,
+    "sd15": false,
+    "llm": null,
+    "swap": false,
+    "base": null,
+    "lora": null,
+    "resolution": null,
+    "steps": 25,
+    "runs": 1,
+    "keep": false,
+    "out": "r1_benchmark_sdxl.json"
+  },
+  "note": "First run: pipeline_load is dominated by the initial ~7GB model download, not steady-state load. See 2026-09-16-sdxl-warm.json for the real figure.",
+  "results": [
+    {
+      "stage": "sdxl:pipeline_load",
+      "seconds": 308.96,
+      "rss_gb": 0.51,
+      "rss_delta_gb": 0.2,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 11.51
+    },
+    {
+      "stage": "sdxl:to_mps",
+      "seconds": 1.7,
+      "rss_gb": 0.35,
+      "rss_delta_gb": -0.32,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 13.06
+    },
+    {
+      "stage": "sdxl:warmup_gen_1step",
+      "seconds": 9.87,
+      "rss_gb": 0.5,
+      "rss_delta_gb": 0.15,
+      "mps_alloc_gb": 6.95,
+      "sys_avail_gb": 7.57
+    },
+    {
+      "stage": "sdxl:gen_25step_run1",
+      "seconds": 25.89,
+      "rss_gb": 0.54,
+      "rss_delta_gb": 0.04,
+      "mps_alloc_gb": 6.94,
+      "sys_avail_gb": 9.06
+    },
+    {
+      "stage": "sdxl:unload",
+      "seconds": 0.25,
+      "rss_gb": 0.51,
+      "rss_delta_gb": -0.02,
+      "mps_alloc_gb": 0.0,
+      "sys_avail_gb": 13.58
+    }
+  ]
+}

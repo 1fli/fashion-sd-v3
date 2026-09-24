@@ -1,0 +1,54 @@
+# Private context — never committed. See CLAUDE.local.md.
+CLAUDE.local.md
+*.local.md
+local/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Model weights and training artifacts — never committed (see docs/decisions/0003)
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+models/
+checkpoints/
+training-data/
+
+# Generated images
+outputs/
+generated/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+dist/
+*.egg-info/
+
+# JVM / Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+*.class
+
+# Node
+node_modules/
+.vite/
+
+# Databases
+*.db
+*.sqlite3
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
