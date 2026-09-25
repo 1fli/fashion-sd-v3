@@ -28,6 +28,9 @@ parts nobody can explain.
 - Commit using the git identity configured locally for this repository.
 - **No AI attribution in commits or pull requests.** No `Co-Authored-By` trailers naming an
   assistant, no "generated with" footers. The commit history is the author's.
+- **Never commit or push without an explicit review.** Stage the changes, show what changed and
+  the proposed message, and wait for approval. This holds even when the work was requested and
+  the change is obviously correct — the review is the point, not a formality.
 
 ## Machine split
 
