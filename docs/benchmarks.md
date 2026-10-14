@@ -78,3 +78,69 @@ This should be measured before the number of candidates per request is fixed.
 ```bash
 python3 tools/benchmark_mac.py --llm mlx-community/Qwen2-VL-7B-Instruct-4bit
 ```
+
+---
+
+# Deploy VM idle baseline — 2026-10-13
+
+Measured on the cloud VM, not the Mac. Oracle Linux 9.7, aarch64, 1 vCPU, 5642 MB RAM, 4095 MB
+swap, 30 GB disk.
+
+The purpose was to establish what the machine costs to merely exist, so that a later measurement
+of the JVM alongside Postgres and Redis has something honest to subtract from. "Idle baseline"
+here means: no project process running at all — only the operating system and the agents Oracle's
+image installs.
+
+## Why the first reading was discarded
+
+The machine was running six VS Code remote-server installations left behind by disconnected
+editor sessions — twelve processes, 3.8 GB on disk, one of them 30 days old. `who` reported no
+logged-in users, so nothing was in use; the clients had gone and the servers had not.
+
+| | Used | Available | Swap used | Disk used |
+|---|---|---|---|---|
+| With the editor servers resident | 1453 MB | 4189 MB | 127 MB | 15 GB (49%) |
+| After removing them | ~711 MB | ~4930 MB | 121 MB | 11 GB (36%) |
+
+Measuring the fit of a 1 GB JVM heap against the first row would have understated available
+memory by roughly 740 MB — about three quarters of the heap being tested.
+
+## Baseline
+
+Twelve samples of `free -m`, ten seconds apart, over two minutes:
+
+| | Range across 12 samples | 
+|---|---|
+| Memory used | 709–715 MB |
+| Memory available | 4927–4933 MB |
+| Swap used | 121 MB, unchanging |
+
+The spread is 6 MB, so this is a steady state rather than an average over a varying one.
+
+Largest resident processes at idle, all from Oracle's image rather than the project: `pmlogger`
+48 MB, `fluentd` 41 MB, `pmdaproc` 30 MB, `oci-wlp` 27 MB — roughly 200 MB of monitoring
+agents in total.
+
+## The finding worth carrying forward
+
+**The machine is already swapping before any project process exists.** 121 MB sits in swap at
+idle, held by `firewalld` (23 MB), a `python3` process (20 MB), `fluentd` and its `ruby` (37 MB
+between them) and `tuned` (9 MB). Removing the editor servers freed 742 MB of RAM but moved swap
+by only 6 MB, which confirms the 121 MB belongs to these long-lived system processes and not to
+anything that was cleaned up.
+
+This matters for how the fit question gets answered. With 4 GB of swap configured, the failure
+mode under memory pressure is not a clean out-of-memory kill — it is the JVM's pages being
+written to disk and the request latency degrading quietly. **A later measurement that reports
+only resident set size will therefore record "it fits" for a configuration that thrashes.** Swap
+activity has to be reported alongside it.
+
+## What this measurement could not detect
+
+It is an idle reading. No JVM, Postgres or Redis was running, so it says nothing about whether
+the three fit together, which is the actual open risk. It also says nothing about CPU: the
+machine has one core, and contention between the JVM, the database and the queue is a separate
+question that a memory measurement cannot answer.
+
+Available memory for the project, as a working figure to be tested rather than a result:
+**~4.9 GB.**
