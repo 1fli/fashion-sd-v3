@@ -105,6 +105,9 @@ overfitting signal worth acting on regardless.
 
 *Accepted (pre-implementation) 2026-09-16*
 
+*The framework version below is superseded by [8](#8-spring-boot-4-replacing-the-boot-3-version-named-in-4)
+— Spring Boot 4, not 3. Everything else in this entry stands.*
+
 Inference is Python-bound — `diffusers`, MLX and `mlx-vlm` have no practical JVM equivalents. That
 half is not a choice. The API tier could have been Python too, and FastAPI would have been faster
 to build.
@@ -211,3 +214,56 @@ honest — the system is not presented as a public product, because it is not on
 reduces to a small filter rather than Spring Security with JWT.
 
 A gate reduces exposure; it does not remove the content-safety obligation.
+
+## 8. Spring Boot 4, replacing the Boot 3 version named in 4
+
+*Accepted 2026-10-14*
+
+**This supersedes one detail of [4](#4-a-cross-language-boundary-crossed-with-redis-streams) and
+nothing else.** The cross-language boundary, Redis Streams over Celery, JVM 21, the Python 3.11
+worker and the single repository all stand unchanged. Only the framework's major version moves.
+
+The question was forced by scaffolding rather than chosen. Spring Initializr — the generator at
+`start.spring.io` that produces a Spring Boot project skeleton, including the Gradle wrapper —
+no longer offers a 3.x version. Its current list is 4.0.8, 4.1.1 and 4.2.0-M2, plus build
+snapshots. Entry 4 named Boot 3 in September 2026 when that was the generator's default.
+
+**Boot 3 is not dead, and saying so would be wrong.** Maven Central currently publishes
+`spring-boot` 3.5.16, and the 3.5 line is still receiving patch releases. Starting on Boot 3 was
+therefore fully available: generate a 4.1.1 project, lower the plugin version, and revert the
+dependency names by hand. That alternative was rejected not because 3.5 is unsupported — it is
+supported — but because it means beginning a project that has no code yet on the previous major
+version, with a migration already scheduled before the first feature exists. Paying a migration
+cost is reasonable when there is something to migrate.
+
+**The cost is real and worth stating rather than discovering later.** Boot 4 renamed the starter
+artifacts. `spring-boot-starter-web` is now `spring-boot-starter-webmvc`, and the single
+`spring-boot-starter-test` split into per-concern test starters such as
+`spring-boot-starter-webmvc-test` and `spring-boot-starter-actuator-test`. This is verifiable
+rather than asserted: `spring-boot-starter-webmvc` has no 3.x release at all on Maven Central —
+its earliest version is 4.0.0-M1.
+
+The practical consequence is that most published material — tutorials, forum answers, blog posts
+— describes Boot 3, so a snippet copied from one will frequently name an artifact that does not
+exist in this build. The mitigating factor is that the failure is loud: an unresolved dependency
+stops the build with the missing coordinate named. It is not a class of error that reaches
+runtime.
+
+**Decision:** Spring Boot 4.1.1 on JVM 21, Gradle with the Kotlin DSL, root package
+`dev.fashionsd`.
+
+The package name is new rather than superseding anything — none was recorded before. The GitHub
+handle is `1fli`, and a Java package segment cannot begin with a digit, so the otherwise
+conventional `io.github.1fli...` is not a legal package.
+
+Evidence that the combination works, with its sample size: a generated 4.1.1 project compiled and
+tested on JDK 21.0.12.1 with Gradle 9.7.1, reporting `BUILD SUCCESSFUL` in 30 s including the
+Spring application-context test the generator emits. That is **one build on one machine**, not a
+benchmark — it establishes that the toolchain resolves and runs, and nothing more. JVM 21 remains
+on Initializr's list (17, 21, 25, 27), so entry 4's JVM choice needed no revisiting.
+
+**What this could not have detected.** A successful build says nothing about runtime memory, which
+is the open risk for a 1 vCPU / 5 GB target. Whether Boot 4 idles in more or less heap than Boot 3
+on this hardware is unmeasured, and a build that compiles on a 48 GB laptop implies nothing about
+a 5 GB VM. That measurement is tracked separately in
+[benchmarks.md](benchmarks.md#deploy-vm-idle-baseline--2026-10-13).

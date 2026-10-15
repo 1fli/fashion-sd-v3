@@ -58,7 +58,7 @@ contract is a deliberate part of the design rather than an accident of tooling.
 
 | Layer | Choice |
 |---|---|
-| Server | Spring Boot 3, JVM 21, Gradle (Kotlin DSL) |
+| Server | Spring Boot 4.1, JVM 21, Gradle (Kotlin DSL) |
 | Persistence | Postgres, Spring Data JPA, Flyway |
 | Queue | Redis Streams with consumer groups |
 | Worker | Python 3.11 |
